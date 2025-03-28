@@ -1,47 +1,16 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const repeatCount = 15;
-    for (let i = 0; i <= repeatCount; i++) {
-        fetchDataAndDisplay();
-    }
-})
+document.addEventListener("DOMContentLoaded", fetchUser);
+document.getElementById("reload-btn").addEventListener("click", fetchUser);
 
-function fetchDataAndDisplay() {
-    const apiUrl = 'https://randomuser.me/api';
-
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const tableBody = document.querySelector('#data-table tbody');
-            data.results.forEach(user => {
-                const row = document.createElement('tr');
-
-                const cellName = document.createElement('td');
-                cellName.textContent = `${user.name.first} ${user.name.last}`;
-                row.appendChild(cellName);
-
-                const gender = document.createElement('td');
-                gender.textContent = user.gender;
-                row.appendChild(gender)
-
-                const cellEmail = document.createElement('td');
-                cellEmail.textContent = user.email;
-                row.appendChild(cellEmail);
-
-                const cellLocation = document.createElement('td');
-                cellLocation.textContent = `${user.location.city}, ${user.location.country}`;
-                row.appendChild(cellLocation);
-
-                const cellPicture = document.createElement('td');
-                const img = document.createElement('img');
-                img.src = user.picture.thumbnail;
-                img.alt = 'User Thumbnail';
-                img.style.width = '50px';
-                img.style.height = '50px';
-                cellPicture.appendChild(img);
-                row.appendChild(cellPicture);
-
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Fehler beim Abrufen der Daten:', error))
+function fetchUser() {
+  fetch("https://randomuser.me/api")
+    .then(response => response.json())
+    .then(data => {
+      const user = data.results[0];
+      document.getElementById("user-image").src = user.picture.large;
+      document.getElementById("user-name").textContent = `${user.name.first} ${user.name.last}`;
+      document.getElementById("user-age").textContent = `Alter: ${user.dob.age}`;
+      document.getElementById("user-email").textContent = `📧 ${user.email}`;
+      document.getElementById("user-country").textContent = `🌍 ${user.location.country}`;
+    })
+    .catch(error => console.error("Fehler beim Laden eines Benutzers:", error));
 }
